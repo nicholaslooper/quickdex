@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.png">
+    <title>QuickDex | Quickly track your Pokemon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QuickDex is a tool that helps you track every Pokemon species you have captured, including form variations. Can be used to track a Living Dex, Shiny Dex, Vivillon Patterns, Unown Letters, Alcremie Flavors, Regional Forms, and more!">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    
+    <nav class="topnav" id="topnav">
+        <div class="logo"><img src="poke.png"> <p>QuickDex</p></div>
+        <div class="view"> 
+            <a href="#" id="openButton" >&#9776;</a>  
+        </div>
+    </nav>
+
+    <div id="sideMenu" class="sidemenu">
+        <a href="#" id="close-menu-button">&#215;</a>
+        <p>Categories</p>
+        <ul>
+            <li class="menuItem" id="natDexButton"><a href=#>National Pokedex</a></li>
+            <li class="menuItem" id="alcremieDexButton"><a href=#>Alcremie Flavors</a></li>
+            <li class="menuItem" id="alolaDexButton"><a href=#>Alolan Forms</a></li>
+            <li class="menuItem" id="galarDexButton"><a href=#>Galarian Forms</a></li>
+            <li class="menuItem" id="gmaxButton"><a href=#>Gigantamax Forms</a></li>
+            <li class="menuItem" id="unownButton"><a href=#>Unown Dex</a></li>
+            <li class="menuItem" id="vivillonButton"><a href=#>Vivillon Patterns</a></li>
+            <li class="menuItem" id="miscButton"><a href=#>Other Forms</a></li>
+        </ul>
+        <p>Settings</p>
+        <ul class="settings">
+            <li>
+                <label class="switch">
+                    <input type="checkbox" id="shiny-switch" name="shiny-switch">
+                        <span class="slider"></span> 
+                </label>
+                <label for="shiny-switch">Shiny Sprites</label>
+            </li> 
+            <li>
+                <button id="clear-data-button">Clear Data</button>
+            </li>
+            
+        </ul>
+    </div>
+    <div id="clear-menu" class="clear-menu">
+        <div class="clear-dialog">
+            <div>Clear all of your saved data?</div>
+            <div>
+                All Pokedexes will be reset. This action cannot be undone.
+            </div>
+            <div>
+                <button id="clear-yes">Yes</button> 
+                <button id="clear-no">No</button>
+            </div>
+        </div>
+    </div>
+    <div id="bg-overlay" class="bg-overlay"></div>
+    <div class="bgc-wrapper">
+        <div class="width-wrapper">
+            <div class="info-wrapper">
+                <div class="pkmncount">
+                    <p id="dexName">National Pokedex</p>
+                    <div id="topCount"></div> 
+                </div>
+                <div class="filterButtons">
+                    <div>  
+                        <button id="filter-button">Filter</button>
+                        <div id="filter-menu" class="filter-menu">
+                            <div id="select-all">All</div>
+                            <div id="select-caught">Caught</div>
+                            <div id="select-uncaught">Uncaught</div>
+                        </div>
+                    </div>
+                        
+                    
+                        
+                        
+                    <button id="allButton">All</button>
+                    <button id="caughtButton">Caught</button>
+                    <button id="uncaughtButton">Uncaught</button>
+
+                    <div>    
+                        <button id="mark-button">&#8226; &#8226; &#8226;</button>
+                        <div id="mark-menu" class="mark-menu">
+                                <div id="all-caught">Mark all Pokemon as caught</div>
+                                <div id="all-uncaught">Mark all Pokemon as uncaught</div>
+                                <div id="mark-range" class="mark-range">
+                                    Mark range caught/uncaught:
+                                   <div id="range-input">
+                                       <input type="number" id="range-start">-<input type="number" id="range-end"> <button id="submit-range">Submit</button>                                
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search">
+                <input type="search" name="" id="searchBox" placeholder="Search by name">
+                <input type="button" id= "searchButton" value="Search">
+            </div>
+        </div>
+        
+    
+        <div class="grid-wrapper">
+            <div id ="pkmnGrid"></div>
+        </div>
+    </div>
+    <div id="scroll-to-top">
+        <p>&#129105;<br />
+        Back to Top</p>   
+    </div> 
+    <nav class="bottom-nav">
+        <div class="bottom-links">
+            <a href="https://nicholaslooper.github.io/quickdex/">QuickDex</a>
+            <a href="https://github.com/nicholaslooper/quickdex">GitHub</a>
+        </div>
+        <div class="bottom-info">
+            <div>
+                An open-source project by Nicholas Looper.
+            </div> 
+            <div>Pokemon sprites and names &#169; Nintendo.</div> 
+        </div> 
+    </nav>    
+    
+    <script src="quickdex_script.js"></script>
+</body>
