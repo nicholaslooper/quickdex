@@ -1,5 +1,4 @@
-/*jshint esversion: 6 */ 
-let natDexUpdated = [
+ let natDexUpdated = [
     {name:"Bulbasaur", number:"001", caught: false, id: "bulbasaur", sprite: "bulbasaur.png"},
     {name:"Ivysaur", number:"002", caught: false, id: "ivysaur", sprite: "ivysaur.png"},
     {name:"Venusaur", number:"003", caught: false, id: "venusaur", sprite: "venusaur.png"},
@@ -1379,7 +1378,7 @@ const displayPokemon = (pkmn) =>{
 
     const pkmnSprite = document.createElement("img");
     pkmnSprite.setAttribute("src", `${spriteType}/${pkmn.sprite}`);
-    pkmnSprite.setAttribute("alt", pkmn.name )
+    pkmnSprite.setAttribute("alt", pkmn.name);
 
     const frag = document.createDocumentFragment();
     frag.appendChild(pkmnNum);
