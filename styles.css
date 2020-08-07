@@ -19,6 +19,12 @@ p{
     margin: 0;
 }
 
+input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 button{
     background: #8e0000;
     font-family: 'Ubuntu', sans-serif;
