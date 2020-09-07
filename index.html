@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="favicon.png">
-    <title>QuickDex | Quickly track your Pokemon</title>
+    <title>QuickDex | Quickly track your Pokémon</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="QuickDex is a tool that helps you track every Pokemon species you have captured, including form variations. Can be used to track a Living Dex, Shiny Dex, Vivillon Patterns, Unown Letters, Alcremie Flavors, Regional Forms, and more!">
     <link rel="stylesheet" type="text/css" href="styles.css">
@@ -22,7 +22,7 @@
         <a href="#" id="close-menu-button">&#215;</a>
         <p>Categories</p>
         <ul>
-            <li class="menuItem" id="natDexButton"><a href=#>National Pokedex</a></li>
+            <li class="menuItem" id="natDexButton"><a href=#>National Pokédex</a></li>
             <li class="menuItem" id="alcremieDexButton"><a href=#>Alcremie Flavors</a></li>
             <li class="menuItem" id="alolaDexButton"><a href=#>Alolan Forms</a></li>
             <li class="menuItem" id="galarDexButton"><a href=#>Galarian Forms</a></li>
@@ -41,16 +41,55 @@
                 <label for="shiny-switch">Shiny Sprites</label>
             </li> 
             <li>
+                <button id="spreadsheet-button">Export Spreadsheet</button>
+            </li>
+            <li>
                 <button id="clear-data-button">Clear Data</button>
             </li>
             
         </ul>
     </div>
-    <div id="clear-menu" class="clear-menu">
-        <div class="clear-dialog">
+    <div id="csv-menu" class="popup-menu">
+        <div class="menu-dialog">
+            <div>Download Spreadsheet</div>
+            <div>Please select categories to export</div>
+            <ul class="check-list">
+                <li>
+                    <input type="checkbox" id="csv1" name="csv1"><label for="csv1">National Pokedex</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv2" name="csv2"><label for="csv2">Alolan Forms</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv3" name="csv3"><label for="csv3">Galarian Forms</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv4" name="csv4"><label for="csv4">Gigantamax Forms</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv5" name="csv5"><label for="csv5">Alcremie Flavors</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv6" name="csv6"><label for="csv6">Unown Dex</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv7" name="csv7"><label for="csv7">Vivillon Patterns</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="csv8" name="csv8"><label for="csv8">Other Forms</label>
+                </li>
+            </ul>
+            <div>
+                <button id="menu-cancel">Cancel</button> 
+                <button id="export-csv">Export</button>
+            </div>
+        </div>
+    </div>
+    <div id="clear-menu" class="popup-menu">
+        <div class="menu-dialog">
             <div>Clear all of your saved data?</div>
             <div>
-                All Pokedexes will be reset. This action cannot be undone.
+                All saved Pokédex data will be lost. This action cannot be undone.
             </div>
             <div>
                 <button id="clear-yes">Yes</button> 
@@ -63,7 +102,7 @@
         <div class="width-wrapper">
             <div class="info-wrapper">
                 <div class="pkmncount">
-                    <p id="dexName">National Pokedex</p>
+                    <p id="dexName">National Pokédex</p>
                     <div id="topCount"></div> 
                 </div>
                 <div class="filterButtons">
@@ -84,10 +123,10 @@
                     <button id="uncaughtButton">Uncaught</button>
 
                     <div>    
-                        <button id="mark-button">&#8226; &#8226; &#8226;</button>
-                        <div id="mark-menu" class="mark-menu">
-                                <div id="all-caught">Mark all Pokemon as caught</div>
-                                <div id="all-uncaught">Mark all Pokemon as uncaught</div>
+                        <button id="option-button">&#8226; &#8226; &#8226;</button>
+                        <div id="option-menu" class="option-menu">
+                                <div id="all-caught">Mark all Pokémon as caught</div>
+                                <div id="all-uncaught">Mark all Pokémon as uncaught</div>
                                 <div id="mark-range" class="mark-range">
                                     Mark range caught/uncaught:
                                    <div id="range-input">
@@ -100,18 +139,19 @@
             </div>
             
             <div class="search">
-                <input type="search" name="" id="searchBox" placeholder="Search by name">
+                <input type="search" name="" id="searchBox" placeholder="Search by name" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
                 <input type="button" id= "searchButton" value="Search">
             </div>
         </div>
         
     
         <div class="grid-wrapper">
+            <div id="results" class="results"></div>
             <div id ="pkmnGrid"></div>
         </div>
     </div>
-    <div id="scroll-to-top">
-        <p>&#129105;<br />
+    <div id="scroll-to-top" class="scroll-btn" role="button">
+        <p>&uarr;<br />
         Back to Top</p>   
     </div> 
     <nav class="bottom-nav">
@@ -123,7 +163,7 @@
             <div>
                 An open-source project by Nicholas Looper.
             </div> 
-            <div>Pokemon sprites and names &#169; Nintendo.</div> 
+            <div>Pokémon sprites and names &#169; Nintendo.</div> 
         </div> 
     </nav>    
     

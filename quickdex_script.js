@@ -1165,6 +1165,7 @@ let miscDexUpdated=[
     {name:"Minior-Blue", number:"774", caught: false, id: "minior-blue", sprite: "minior-blue.png"},
     {name:"Minior-Indigo", number:"774", caught: false, id: "minior-indigo", sprite: "minior-indigo.png"},
     {name:"Minior-Violet", number:"774", caught: false, id: "minior-violet", sprite: "minior-violet.png"},
+    {name:"Magearna-Original", number:"801", caught: false, id: "magearna-original", sprite: "magearna-original.png"},
     {name: "Toxtricity-Amped", number:"849", caught: false, id: "toxtricity", sprite: "toxtricity.png"},
     {name: "Toxtricity-Low Key", number:"849", caught: false, id: "toxtricity-low-key", sprite: "toxtricity-low-key.png"},
     {name: "Sinistea-Antq", number:"854", caught: false, id: "sinistea-antique", sprite: "sinistea.png"},
@@ -1174,7 +1175,7 @@ let miscDexUpdated=[
     {name: "Indeedee♂", number:"876", caught: false, id: "indeedee-f", sprite: "female/indeedee.png"},
     {name: "Indeedee♀", number:"876", caught: false, id: "indeedee", sprite: "indeedee.png"},
     {name: "Urshifu-Single", number:"892", caught: false, id: "urshifu-single", sprite: "urshifu.png"},
-    {name: "Urshifu-Rapid", number:"892", caught: false, id: "urshifu-rapid", sprite: "urshifu.png"},
+    {name: "Urshifu-Rapid", number:"892", caught: false, id: "urshifu-rapid", sprite: "urshifu.png"}
 ];
 
 //load saved data and update 
@@ -1356,6 +1357,21 @@ miscDex.sort((a,b)=> a.number-b.number);
 let state=natDex;
 let filter="all";
 let caughtTotal=natDexTotal;
+const results = document.getElementById("results");
+
+//Display caught totals
+
+const leadingZeros=(num)=>{
+    if(num<=9){
+        return `00${num}`;
+    }else if(num>=10 && num<=99){
+        return  `0${num}`;
+    }
+
+    return num;
+};
+const topCount = document.getElementById("topCount");
+topCount.textContent=`${leadingZeros(caughtTotal)}/${state.length}`;
 
 
 //Create a div for each pokemon
@@ -1365,6 +1381,7 @@ const displayPokemon = (pkmn) =>{
     const pkmnBox = document.createElement("div");
     pkmnBox.className ="pkmnBox";
     pkmnBox.id=pkmn.id;
+    pkmnBox.setAttribute("role", "button");
     pkmnBox.setAttribute("tabindex", "0");
 
     const pkmnBoxCont = document.createElement("div");
@@ -1507,35 +1524,28 @@ document.getElementById("pkmnGrid").addEventListener("keypress", (e)=>{
     }
 });
 
-//Display caught totals
 
-const leadingZeros=(num)=>{
-    if(num<=9){
-        return `00${num}`;
-    }else if(num>=10 && num<=99){
-        return  `0${num}`;
-    }
-
-    return num;
-};
-const topCount = document.getElementById("topCount");
-topCount.textContent=`${leadingZeros(caughtTotal)}/${state.length}`;
 
 //Search
 
 document.getElementById("searchButton").addEventListener("click", ()=>{
-    let searchBox= document.getElementById("searchBox");
+    const searchBox= document.getElementById("searchBox");
     let query= searchBox.value.toLowerCase();
     const pkmnGrid= document.getElementById("pkmnGrid");
     pkmnGrid.innerHTML="";
+    let searchResults = 0;
     filter="search";
     for (let i=0; i<state.length; i++){
         if (state[i].name.toLowerCase().includes(query)){
             displayPokemon(state[i]);
+            searchResults++;
         }
     }
-    
-
+    if(!searchResults){
+        results.textContent= `No Pokémon found matching "${query}"`;
+    }else{
+        results.textContent= `Found ${searchResults} Pokémon matching "${query}"`;
+    }
 });
 
 document.getElementById("searchBox").addEventListener("keypress", (e)=>{
@@ -1573,7 +1583,7 @@ document.getElementById("bg-overlay").addEventListener("click",()=>{
 //Open and Close Filter Menu (mobile)
 
 window.addEventListener("click", (e)=>{
-    let filterMenu = document.getElementById("filter-menu");
+    const filterMenu = document.getElementById("filter-menu");
     if(e.target.id=="filter-button"){
         filterMenu.classList.toggle("open-drop-down");
     }else if(e.target.id=="filter-menu"){
@@ -1592,15 +1602,11 @@ document.getElementById("allButton").addEventListener("click", (e)=>{
     const pkmnGrid= document.getElementById("pkmnGrid");
     pkmnGrid.innerHTML="";
     state.forEach(displayPokemon);
+    results.textContent="";
 });
 
 document.getElementById("select-all").addEventListener("click", (e)=>{ 
-    e.preventDefault();
-    filter="all";
-    document.getElementById("filter-menu").classList.toggle("open-drop-down"); 
-    const pkmnGrid= document.getElementById("pkmnGrid");
-    pkmnGrid.innerHTML="";
-    state.forEach(displayPokemon);
+    document.getElementById("allButton").click(e);
 });
 
 
@@ -1610,11 +1616,10 @@ document.getElementById("caughtButton").addEventListener("click", (e)=>{
     const pkmnGrid= document.getElementById("pkmnGrid");
     pkmnGrid.innerHTML="";
     if(!caughtTotal){
-        const noResults=document.createElement("div");
-        noResults.className="noResults";
-        noResults.textContent="No results";
-        pkmnGrid.appendChild(noResults);
+        results.textContent="You haven't caught any Pokémon yet!";
         return;
+    }else{
+        results.textContent="";
     }
     for(let i=0; i<state.length; i++){
         if (state[i].caught){
@@ -1624,23 +1629,7 @@ document.getElementById("caughtButton").addEventListener("click", (e)=>{
 });
 
 document.getElementById("select-caught").addEventListener("click", (e)=>{
-    e.preventDefault();
-    filter="caught";
-    document.getElementById("filter-menu").classList.toggle("open-drop-down"); 
-    const pkmnGrid= document.getElementById("pkmnGrid");
-    pkmnGrid.innerHTML="";
-    if(!caughtTotal){
-        const noResults=document.createElement("div");
-        noResults.className="noResults";
-        noResults.textContent="No results";
-        pkmnGrid.appendChild(noResults);
-        return;
-    }
-    for(let i=0; i<state.length; i++){
-        if (state[i].caught){
-            displayPokemon(state[i]);
-        }
-    }   
+    document.getElementById("caughtButton").click(e);
 });
 
 
@@ -1650,24 +1639,23 @@ document.getElementById("uncaughtButton").addEventListener("click", (e)=>{
     filter="uncaught";
     const pkmnGrid= document.getElementById("pkmnGrid");
     pkmnGrid.innerHTML="";
+    let uncaughtPkmn= 0;
     for(let i=0; i<state.length; i++){
         if (!state[i].caught){
             displayPokemon(state[i]);
+            uncaughtPkmn++;
         }
-    }   
+    }
+    if(uncaughtPkmn==0){
+        results.textContent="You caught every Pokémon in this category!";
+        return;
+    }else{
+        results.textContent="";
+    }
 });
 
 document.getElementById("select-uncaught").addEventListener("click", (e)=>{
-    e.preventDefault();
-    filter="uncaught";
-    document.getElementById("filter-menu").classList.toggle("open-drop-down"); 
-    const pkmnGrid= document.getElementById("pkmnGrid");
-    pkmnGrid.innerHTML="";
-    for(let i=0; i<state.length; i++){
-        if (!state[i].caught){
-            displayPokemon(state[i]);
-        }
-    }   
+    document.getElementById("uncaughtButton").click(e);
 });
 
 //Hide range menu if not viewing full National Dex
@@ -1684,15 +1672,15 @@ const rangeOptions=()=>{
 //Open and Close Option Menu
 
 window.addEventListener("click", (e)=>{
-    let markMenu = document.getElementById("mark-menu");
+    const optionMenu = document.getElementById("option-menu");
     
-    if(e.target.id=="mark-button"){
-        markMenu.classList.toggle("open-drop-down");
+    if(e.target.id=="option-button"){
+        optionMenu.classList.toggle("open-drop-down");
         rangeOptions();
     }else if(e.target.id=="mark-range" || e.target.parentElement.id=="range-input" || e.target.parentElement.id=="mark-range"){
         return;
     }else{
-        markMenu.classList.remove("open-drop-down");
+        optionMenu.classList.remove("open-drop-down");
     }
     
 });
@@ -1701,6 +1689,7 @@ window.addEventListener("click", (e)=>{
 
 document.getElementById("all-caught").addEventListener("click", (e)=>{
     e.preventDefault();
+    results.textContent="";
     state.forEach(pokemon=>{
         pokemon.caught=true;
     });
@@ -1771,6 +1760,7 @@ document.getElementById("all-caught").addEventListener("click", (e)=>{
 
 document.getElementById("all-uncaught").addEventListener("click", (e)=>{
     e.preventDefault();
+    results.textContent="";
     state.forEach(pokemon=>{
         pokemon.caught=false;
     });
@@ -1850,22 +1840,27 @@ document.getElementById("submit-range").addEventListener("click", ()=>{
     for (let i=startNum-1; i<endNum; i++){
         document.getElementsByClassName("pkmnBox")[i].click();
     }
-    document.getElementById("mark-menu").classList.remove("open-drop-down");
+    document.getElementById("option-menu").classList.remove("open-drop-down");
     document.getElementById("range-start").value="";
     document.getElementById("range-end").value="";
 });
 
 //Hamburger menu options - (Switch Dex)
 
-document.getElementById("natDexButton").addEventListener("click",(e)=>{
+const dexDefaults =(e)=>{
     e.preventDefault();
     window.scrollTo({top: 0, left: 0});
     toggleMenu();
     filter="all";
     pkmnGrid.innerHTML="";
+    results.textContent="";
+};
+
+document.getElementById("natDexButton").addEventListener("click",(e)=>{
+    dexDefaults(e);
     state=natDex;
     caughtTotal=natDexTotal;
-    document.getElementById("dexName").textContent="National Pokedex";
+    document.getElementById("dexName").textContent="National Pokédex";
     state.forEach(displayPokemon);
     topCount.textContent=`${leadingZeros(caughtTotal)}/${leadingZeros(state.length)}`;
     
@@ -1873,11 +1868,7 @@ document.getElementById("natDexButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("alcremieDexButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=alcremieDex;
     caughtTotal=alcremieDexTotal;
     document.getElementById("dexName").textContent="Alcremie Flavors";
@@ -1887,11 +1878,7 @@ document.getElementById("alcremieDexButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("alolaDexButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=alolaDex;
     caughtTotal=alolaDexTotal;
     document.getElementById("dexName").textContent="Alolan Forms";
@@ -1901,11 +1888,7 @@ document.getElementById("alolaDexButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("galarDexButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=galarDex;
     caughtTotal=galarDexTotal;
     document.getElementById("dexName").textContent="Galarian Forms";
@@ -1915,11 +1898,7 @@ document.getElementById("galarDexButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("gmaxButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=gmaxDex;
     caughtTotal=gmaxDexTotal;
     document.getElementById("dexName").textContent="Gigantamax Forms";
@@ -1929,11 +1908,7 @@ document.getElementById("gmaxButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("unownButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=unownDex;
     caughtTotal=unownDexTotal;
     document.getElementById("dexName").textContent="Unown Dex";
@@ -1943,11 +1918,7 @@ document.getElementById("unownButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("vivillonButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=vivillonDex;
     caughtTotal=vivillonDexTotal;
     document.getElementById("dexName").textContent="Vivillon Patterns";
@@ -1957,11 +1928,7 @@ document.getElementById("vivillonButton").addEventListener("click",(e)=>{
 });
 
 document.getElementById("miscButton").addEventListener("click",(e)=>{
-    e.preventDefault();
-    window.scrollTo({top: 0, left: 0});
-    toggleMenu();
-    filter="all";
-    pkmnGrid.innerHTML="";
+    dexDefaults(e);
     state=miscDex;
     caughtTotal=miscDexTotal;
     document.getElementById("dexName").textContent="Other Forms";
@@ -1972,7 +1939,7 @@ document.getElementById("miscButton").addEventListener("click",(e)=>{
 
 //Shiny sprites on/off switch
 
-let shinySwitch = document.getElementById("shiny-switch");
+const shinySwitch = document.getElementById("shiny-switch");
 
 if(spriteType=="shiny"){
     shinySwitch.checked="true";
@@ -2012,22 +1979,108 @@ document.getElementById("clear-yes").addEventListener("click", ()=> {
     location.reload();
 });
 
+//Export to Spreadsheet
+
+document.getElementById("spreadsheet-button").addEventListener("click", ()=>{
+    document.getElementById("csv-menu").classList.toggle("display-dialog");
+});
+
+document.getElementById("menu-cancel").addEventListener("click", ()=> {
+    document.getElementById("csv-menu").classList.remove("display-dialog");
+});
+
+
+
+let createCSV=()=>{
+    let csv= "QuickDex \n";
+    let checkCount=0;
+
+    const csv1 = document.getElementById("csv1");
+    const csv2 = document.getElementById("csv2");
+    const csv3 = document.getElementById("csv3");
+    const csv4 = document.getElementById("csv4");
+    const csv5 = document.getElementById("csv5");
+    const csv6 = document.getElementById("csv6");
+    const csv7 = document.getElementById("csv7");
+    const csv8 = document.getElementById("csv8");
+    
+    
+
+    const csvHead=(dex)=>`\n ${dex} \n Name, Dex Number, Caught\n`;
+
+    const csvRows=(pkmn)=>{
+        let caughtStatus = pkmn.caught? "X" : "";
+        csv+= `${pkmn.name}, ${pkmn.number}, ${caughtStatus}\n`;
+    };
+
+    if (csv1.checked){
+        csv += csvHead("National Dex");
+        natDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv2.checked){
+        csv += csvHead("Alolan Forms");
+        alolaDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv3.checked){
+        csv += csvHead("Galarian Forms");
+        galarDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv4.checked){
+        csv += csvHead("Gigantamax Forms");
+        gmaxDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv5.checked){
+        csv += csvHead("Alcremie Flavors");
+        alcremieDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv6.checked){
+        csv += csvHead("Unown Dex");
+        unownDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv7.checked){
+        csv += csvHead("Vivillon Dex");
+        vivillonDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (csv8.checked){
+        csv += csvHead("Other Forms");
+        miscDex.forEach(csvRows);
+        checkCount++;
+    }
+    if (checkCount){
+        const csvDownload = document.createElement("a");
+        csvDownload.href="data:text/csv;charset=utf-8," + encodeURI(csv);
+        csvDownload.download="quickdex.csv";
+        csvDownload.click();
+        document.getElementById("csv-menu").classList.remove("display-dialog");
+    }else{
+    return;
+    }
+};
+
+document.getElementById("export-csv").addEventListener("click", createCSV);
 
 //Back to top button
 
 let prevPosition = window.pageYOffset;
 window.addEventListener("scroll",()=>{
-    let scrollToTop = document.getElementById("scroll-to-top");
+    const scrollToTop = document.getElementById("scroll-to-top");
     let newPosition = window.pageYOffset;
     if(newPosition<prevPosition && newPosition>320){
-        scrollToTop.style.opacity=1;
+        scrollToTop.classList.add("show");
     }else{
-        scrollToTop.style.opacity=0;
+        scrollToTop.classList.remove("show");
     }
     prevPosition=newPosition;
 });
 
-let scrollTopButton = document.getElementById("scroll-to-top");
+const scrollTopButton = document.getElementById("scroll-to-top");
 scrollTopButton.addEventListener("click",()=>{
     window.scrollTo({
         top: 0,
@@ -2035,8 +2088,3 @@ scrollTopButton.addEventListener("click",()=>{
         behavior: "smooth"
       });
 });
-
-
-
-
-
