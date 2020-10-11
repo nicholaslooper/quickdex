@@ -442,7 +442,7 @@ input:focus + .slider {
 .grid-wrapper {
     background-color:#fafafa;
     border-radius:15px 15px 0 0;
-    min-height:calc(100vh-150px);
+    min-height:calc(100vh - 150px);
     padding:2rem 5%;
     width:auto;
     }
@@ -634,10 +634,6 @@ p,.logo p {
     .option-menu {
         left:initial;
         width:250px;
-    }
-    
-    .results {
-        justify-content:flex-start;
     }
     
     #pkmnGrid {

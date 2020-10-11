@@ -1304,7 +1304,9 @@ currentDex.dex.forEach(displayPokemon);
 
 const pkmnClick=(e)=>{
     let clickedPkmn= e.target.closest(".pkmnBox");
-        if (!clickedPkmn){return;} 
+        if (!clickedPkmn){
+            return;
+        } 
         for(let i=0; i<currentDex.dex.length; i++){
             if(clickedPkmn.id==currentDex.dex[i].id){
                 currentDex.dex[i].caught=!currentDex.dex[i].caught;
@@ -1315,9 +1317,16 @@ const pkmnClick=(e)=>{
                     currentDex.total--;
                         }
                 localStorage.setItem("pokedex", JSON.stringify(pokedex));
-                topCount.textContent=`${leadingZeros(currentDex.total)}/${leadingZeros(currentDex.dex.length)}`;  
+                topCount.textContent=`${leadingZeros(currentDex.total)}/${leadingZeros(currentDex.dex.length)}`; 
+                
+                if(filter==="uncaught"){
+                    filterUncaught();
+                }else if(filter==="caught"){
+                    filterCaught();
+                }
             }
-        }   
+        } 
+
 };
 
 document.getElementById("pkmnGrid").addEventListener("click", (e)=>{
@@ -1395,7 +1404,7 @@ function dropMenuEvents(e){
     }
 }
 
-document.body.addEventListener("click", (e)=>{
+document.getElementsByTagName("body")[0].addEventListener("click", (e)=>{
     dropMenuEvents(e);
 });
 
